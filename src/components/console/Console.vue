@@ -5,11 +5,11 @@
         <v-list-item-content>
           <v-col cols="12" sm="3" md="3" class="ma-0 pa-0">
             <v-avatar color="blue" size="36">
-              <span class="white--text headline">SC</span>
+              <span class="white--text headline">{{info.initial}}</span>
             </v-avatar>
           </v-col>
           <v-col class="ma-0 pa-0">
-            <v-list-item-title class="title">Sebastian Cavada</v-list-item-title>
+            <v-list-item-title class="title">{{info.name}}</v-list-item-title>
             <v-list-item-subtitle>{{role}}</v-list-item-subtitle>
           </v-col>
         </v-list-item-content>
@@ -23,7 +23,7 @@
             <v-icon>{{ page.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>{{ page.text}}</v-list-item-title>
+            <v-list-item-title>{{page.text}}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -114,7 +114,8 @@ export default {
     admin: false,
     dialog: false,
     store: store,
-    role: null
+    role: null,
+    info: {name:"", initial:""}
   }),
   methods: {
     changeroute(value) {
@@ -143,8 +144,27 @@ export default {
     },
     isDark() {
       return !this.$vuetify.theme.dark;
+    },
+    getDataUser(userType) {
+      console.log("getting data of the user");
+      axios
+        .get("/user/info")
+        .then(res => {
+          this.info = res.data[userType];
+          this.info.initial = this.getInitials(res.data[userType].name);
+        })
+        .catch(err => {
+          this.info = {name:"Sebastian Cavada"};
+          this.info.initial = "SC";
+          console.log(err);
+        });
+    },
+    getInitials(str){
+      var newmsg = str.replace(/[a-z]/g, '');
+      return newmsg;
     }
   },
+
   created() {
     var role = localStorage.getItem("roles");
 
@@ -155,6 +175,8 @@ export default {
       this.admin = false;
       this.role = "Supplier";
     }
+
+    this.getDataUser(this.role.toLowerCase());
 
     store.data.setMessageAction("Benvenuto!");
 

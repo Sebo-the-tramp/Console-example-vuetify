@@ -132,7 +132,7 @@ export default {
           text: "Nome supplier",
           align: "start",
           sortable: true,
-          value: "supplierName"
+          value: "name"
         },
         { text: "Iva", value: "supplierIva" },
         {
