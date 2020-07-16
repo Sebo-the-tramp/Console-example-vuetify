@@ -11,31 +11,29 @@
         </v-col>
       </v-row>
 
-    
-      <v-row v-for="data in dataCharts" :key="data.name">
-        <v-col cols="12" md="6" sm="12">
-          <v-card>
-            <v-row align="center" justify="center" style="height:80px">
-              <h3>{{data.name}} + {{data.percentage}}%</h3>
-            </v-row>
-            <v-sparkline
-              :value="data.values"
-              :gradient="chartSettings.gradient"
-              :smooth="chartSettings.radius || false"
-              :padding="chartSettings.padding"
-              :line-width="chartSettings.lineWidth"
-              :stroke-linecap="chartSettings.lineCap"
-              :gradient-direction="chartSettings.gradientDirection"
-              :fill="chartSettings.fill"
-              :type="chartSettings.type"
-              :auto-line-width="chartSettings.autoLineWidth"
-              auto-draw
-              :show-labels="chartSettings.showLabels"
-              :label-size="chartSettings.labelSize"
-            ></v-sparkline>
-
-          </v-card>
-        </v-col>
+      <v-row>
+          <v-col cols="12" md="6" sm="12" v-for="data in dataCharts" :key="data.name">
+            <v-card>
+              <v-row align="center" justify="center" style="height:80px">
+                <h3>{{data.name}} + {{data.percentage}}%</h3>
+              </v-row>
+              <v-sparkline
+                :value="data.values"
+                :gradient="chartSettings.gradient"
+                :smooth="chartSettings.radius || false"
+                :padding="chartSettings.padding"
+                :line-width="chartSettings.lineWidth"
+                :stroke-linecap="chartSettings.lineCap"
+                :gradient-direction="chartSettings.gradientDirection"
+                :fill="chartSettings.fill"
+                :type="chartSettings.type"
+                :auto-line-width="chartSettings.autoLineWidth"
+                auto-draw
+                :show-labels="chartSettings.showLabels"
+                :label-size="chartSettings.labelSize"
+              ></v-sparkline>
+            </v-card>
+          </v-col>
       </v-row>
     </v-container>
   </v-app>
@@ -54,7 +52,7 @@ const gradients = [
 export default {
   data: () => ({
     chartSettings: {
-      showLabels: false,
+      showLabels: true,
       lineWidth: 1.5,
       labelSize: 7,
       radius: 10,

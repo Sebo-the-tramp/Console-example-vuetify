@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container fluid >
-      <v-col class="md-12 background">
+      <v-col>
         <v-card style="height:80px" class="secondary" dark>
           <v-row align="center" justify="center" style="height:80px">
             <h2 v-if="data_shop==null">Settings:</h2>
