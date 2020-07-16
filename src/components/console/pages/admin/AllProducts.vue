@@ -145,7 +145,7 @@ export default {
       search: "",
       headers: [
         { text: "Id", value: "id" },
-        { text: "Supplier", value: "supplier.supplierName" },
+        { text: "Supplier", value: "supplier.name" },
         {
           text: "Nome piatto",
           align: "start",
