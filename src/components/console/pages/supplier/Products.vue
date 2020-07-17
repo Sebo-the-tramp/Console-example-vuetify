@@ -1,130 +1,142 @@
 <template>
   <v-app>
     <v-container fluid>
-      <v-col class="md-12">
-        <v-card class="secondary" dark>
-          <v-card-title>
-            Products
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-card-title>
-          <v-data-table
-            class="secondary"
-            loading-text="Caricamento..."
-            no-data-text="Aggiungi un piatto per cominciare"
-            :headers="headers"
-            :items="items_shop"
-            :search="search"
-          >
-            <!-- adding the sign of the price -->
-            <template v-slot:item.price="{ item }">{{ item.price + " €" }}</template>
-            <!-- Top Slot -->
-            <template v-slot:top>
-              <v-toolbar flat class="secondary" dark>
-                <v-spacer></v-spacer>
-                <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-                  <template v-slot:activator="{ on }">
-                    <v-btn color="primary" dark class="mb-2" v-on="on">Aggiungi piatto</v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-text>
-                      <v-container>
-                        <v-row>
-                          <v-col cols="12" sm="12" md="12">
-                            <v-text-field
-                              :rules="nameRules"
-                              v-model="editedItem.productName"
-                              label="Nome prodotto"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-select
-                              class="pa-3"
-                              label="Categoria"
-                              v-model="editedItem.category"
-                              :items="categoriesGlobal"
-                              item-text="categoryName"
-                              item-value="id"
-                              return-object
-                            ></v-select>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              :rules="priceRules"
-                              v-model="editedItem.price"
-                              label="Prezzo"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="12" md="12">
-                            <v-textarea
-                              label="Descrizione ed ingredienti"
-                              v-model="editedItem.productDescription"
-                              :value="editedItem.productDescripti"
-                              hint="inserisci gli ingredienti e una corta descrizione (opzionale)"
-                            ></v-textarea>
-                          </v-col>
-                          <v-col cols="12" sm="10" md="6">
-                            <v-file-input
-                              prepend-icon="mdi-camera"
-                              multiple
-                              label="File input"
-                              @change="saveImage"
-                              @click:clear="resetImage"
-                            ></v-file-input>
-                          </v-col>
-                          <v-col cols="12" sm="2" md="1">
-                            <v-progress-circular
-                              class="mt-5"
-                              rotate="0"
-                              size="32"
-                              :value="loadingValue"
-                              width="4"
-                              color="light-blue"
-                            >{{ loadingValue }}</v-progress-circular>
-                          </v-col>
-                          <v-col cols="12" sm="12" md="6" class="justify-center">
-                            <v-img
-                              :src="computeLink(editedItem.imgLink)"
-                              width="200px"
-                              height="200px"
-                              class="grey darken-4"
-                              alt="Loading..."
-                            ></v-img>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card-text>
+      <v-row>
+        <v-col>
+          <v-card>
+            <v-row align="center" justify="center" style="height:80px">
+              <h2>List of all products</h2>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
 
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </v-toolbar>
-            </template>
+      <v-row>
+        <v-col class="md-12">
+          <v-card class="secondary" dark>
+            <v-card-title>
+              Products
+              <v-spacer></v-spacer>
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-card-title>
+            <v-data-table
+              class="secondary"
+              loading-text="Caricamento..."
+              no-data-text="Aggiungi un piatto per cominciare"
+              :headers="headers"
+              :items="items_shop"
+              :search="search"
+            >
+              <!-- adding the sign of the price -->
+              <template v-slot:item.price="{ item }">{{ item.price + " €" }}</template>
+              <!-- Top Slot -->
+              <template v-slot:top>
+                <v-toolbar flat class="secondary" dark>
+                  <v-spacer></v-spacer>
+                  <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
+                    <template v-slot:activator="{ on }">
+                      <v-btn color="primary" dark class="mb-2" v-on="on">Aggiungi piatto</v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="12" sm="12" md="12">
+                              <v-text-field
+                                :rules="nameRules"
+                                v-model="editedItem.productName"
+                                label="Nome prodotto"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-select
+                                class="pa-3"
+                                label="Categoria"
+                                v-model="editedItem.category"
+                                :items="categoriesGlobal"
+                                item-text="categoryName"
+                                item-value="id"
+                                return-object
+                              ></v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                :rules="priceRules"
+                                v-model="editedItem.price"
+                                label="Prezzo"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="12">
+                              <v-textarea
+                                label="Descrizione ed ingredienti"
+                                v-model="editedItem.productDescription"
+                                :value="editedItem.productDescripti"
+                                hint="inserisci gli ingredienti e una corta descrizione (opzionale)"
+                              ></v-textarea>
+                            </v-col>
+                            <v-col cols="12" sm="10" md="6">
+                              <v-file-input
+                                prepend-icon="mdi-camera"
+                                multiple
+                                label="File input"
+                                @change="saveImage"
+                                @click:clear="resetImage"
+                              ></v-file-input>
+                            </v-col>
+                            <v-col cols="12" sm="2" md="1">
+                              <v-progress-circular
+                                class="mt-5"
+                                rotate="0"
+                                size="32"
+                                :value="loadingValue"
+                                width="4"
+                                color="light-blue"
+                              >{{ loadingValue }}</v-progress-circular>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="6" class="justify-center">
+                              <v-img
+                                :src="computeLink(editedItem.imgLink)"
+                                width="200px"
+                                height="200px"
+                                class="grey darken-4"
+                                alt="Loading..."
+                              ></v-img>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
 
-            <template v-slot:item.actions="{ item }">
-              <v-icon
-                v-if="item.showProduct"
-                small
-                class="mr-2"
-                @click="toggleShowProduct(item)"
-              >mdi-eye</v-icon>
-              <v-icon v-else small class="mr-2" @click="toggleShowProduct(item)">mdi-eye-off</v-icon>
-              <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-              <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-col>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-toolbar>
+              </template>
+
+              <template v-slot:item.actions="{ item }">
+                <v-icon
+                  v-if="item.showProduct"
+                  small
+                  class="mr-2"
+                  @click="toggleShowProduct(item)"
+                >mdi-eye</v-icon>
+                <v-icon v-else small class="mr-2" @click="toggleShowProduct(item)">mdi-eye-off</v-icon>
+                <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+                <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </v-app>
 </template>

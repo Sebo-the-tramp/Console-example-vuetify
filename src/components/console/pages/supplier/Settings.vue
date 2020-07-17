@@ -1,146 +1,162 @@
 <template>
   <v-app>
-    <v-container fluid >
-      <v-col>
-        <v-card style="height:80px" class="secondary" dark>
-          <v-row align="center" justify="center" style="height:80px">
-            <h2 v-if="data_shop==null">Settings:</h2>
-            <h2 v-else>Settings: {{data_shop.name}}</h2>
-          </v-row>
-        </v-card>
-        <v-skeleton-loader v-if="data_shop == null" class="ma-5 pa-2" max-width="100%" type="card" dark></v-skeleton-loader>
-        <v-card v-else class="mt-5 pa-10">
-          <v-row>
-            <h3>Dati generali</h3>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-text-field v-model="data_shop.name" label="Nome" required></v-text-field>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="data_shop.delivery_cost"
-                label="costo spedizione"
-                required
-                prefix="€"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="12">
-              <v-text-field v-model="data_shop.description" label="Descrizione"></v-text-field>
-            </v-col>
+    <v-container fluid>
+      <v-row>
+        <v-col>
+          <v-card style="height:80px" class="secondary" dark>
+            <v-row align="center" justify="center" style="height:80px">
+              <h2>Settings:</h2>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-skeleton-loader
+            v-if="data_shop == null"
+            max-width="100%"
+            type="card"
+            dark
+          ></v-skeleton-loader>
+          <v-card v-else class=" pa-10">
+            <v-row>
+              <h3>Dati generali</h3>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field v-model="data_shop.name" label="Nome" required></v-text-field>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="data_shop.delivery_cost"
+                  label="costo spedizione"
+                  required
+                  prefix="€"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="12">
+                <v-text-field v-model="data_shop.description" label="Descrizione"></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" md="12">
+                <v-combobox
+                  v-model="categories_concat"
+                  :items="categories"
+                  chips
+                  clearable
+                  label="Categories"
+                  multiple
+                  prepend-icon="mdi-plus"
+                  solo
+                >
+                  <template v-slot:selection="{ attrs, item, select, selected }">
+                    <v-chip v-bind="attrs" :input-value="selected">
+                      <strong>{{ item }}</strong>&nbsp;
+                    </v-chip>
+                  </template>
+                </v-combobox>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <h3>Recapiti</h3>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field v-model="data_shop.mail" label="mail" required></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="1" sm="1">
+                <v-select :value="data_shop.prefix" :items="prefix" label="prefix"></v-select>
+              </v-col>
+              <v-col cols="12" md="5" sm="4">
+                <v-text-field v-model="data_shop.telephone" label="telephone" required></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <h3>Orari</h3>
+            </v-row>
+            <v-row class="px-4">
+              <v-col cols="12" md="6">
+                <v-select
+                  label="Aperto da"
+                  style="30px"
+                  :items="days"
+                  :value="data_shop.open_from_dow"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-select label="fino a" :items="days" :value="data_shop.delivery_from_dow"></v-select>
+              </v-col>
+            </v-row>
+            <v-row class="px-4">
+              <v-col cols="12" md="6">
+                <v-select
+                  label="Consegne da"
+                  style="30px"
+                  :items="days"
+                  :value="data_shop.open_from_dow"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-select label="fino a" :items="days" :value="data_shop.delivery_to_dow"></v-select>
+              </v-col>
+            </v-row>
+          </v-card>
+
+          <v-row align="center" justify="center">
+            <div class="my-2">
+              <v-btn color="pink darken-1" dark v-if="data_shop != null" @click="saveShop">Save Data</v-btn>
+            </div>
           </v-row>
 
-          <v-row>
-            <v-col cols="12" md="12">
-              <v-combobox
-                v-model="categories_concat"
-                :items="categories"
-                chips
-                clearable
-                label="Categories"
-                multiple
-                prepend-icon="mdi-plus"
-                solo
-              >
-                <template v-slot:selection="{ attrs, item, select, selected }">
-                  <v-chip v-bind="attrs" :input-value="selected">
-                    <strong>{{ item }}</strong>&nbsp;
-                  </v-chip>
-                </template>
-              </v-combobox>
-            </v-col>
-          </v-row>
+          <v-skeleton-loader
+            v-if="data_address.address_street==null"
+            max-width="100%"
+            type="card"
+            dark
+          ></v-skeleton-loader>
+          <v-card v-else class="mt-5 pa-10">
+            <v-row>
+              <h3>Indirizzo</h3>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-text-field v-model="data_address.address_street" label="street" required></v-text-field>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-text-field v-model="data_address.address_number" label="numero" required></v-text-field>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-select
+                  class="pa-3"
+                  label="comune"
+                  v-model="data_address.municipality_id"
+                  :items="municipalities"
+                  item-text="municipality_name"
+                  item-value="municipality_id"
+                  @change="changeMunicipalitiesID"
+                ></v-select>
+              </v-col>
+            </v-row>
+          </v-card>
 
-          <v-row>
-            <h3>Recapiti</h3>
+          <v-row align="center" justify="center">
+            <div class="my-2">
+              <v-btn
+                color="pink darken-1"
+                dark
+                v-if="data_shop != null"
+                @click="saveAddress"
+              >Save Address</v-btn>
+            </div>
           </v-row>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-text-field v-model="data_shop.mail" label="mail" required></v-text-field>
-            </v-col>
-
-            <v-col cols="12" md="1" sm="1">
-              <v-select :value="data_shop.prefix" :items="prefix" label="prefix"></v-select>
-            </v-col>
-            <v-col cols="12" md="5" sm="4">
-              <v-text-field v-model="data_shop.telephone" label="telephone" required></v-text-field>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <h3>Orari</h3>
-          </v-row>
-          <v-row class="px-4">
-            <v-col cols="12" md="6">
-              <v-select
-                label="Aperto da"
-                style="30px"
-                :items="days"
-                :value="data_shop.open_from_dow"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select label="fino a" :items="days" :value="data_shop.delivery_from_dow"></v-select>
-            </v-col>
-          </v-row>
-          <v-row class="px-4">
-            <v-col cols="12" md="6">
-              <v-select
-                label="Consegne da"
-                style="30px"
-                :items="days"
-                :value="data_shop.open_from_dow"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select label="fino a" :items="days" :value="data_shop.delivery_to_dow"></v-select>
-            </v-col>
-          </v-row>
-        </v-card>
-
-        <v-row align="center" justify="center">
-          <div class="my-2">
-            <v-btn color="pink darken-1" dark v-if="data_shop != null" @click="saveShop">Save Data</v-btn>
-          </div>
-        </v-row>
-
-        <v-skeleton-loader v-if="data_address.address_street==null" class="ma-5 pa-2" max-width="100%" type="card" dark></v-skeleton-loader>
-        <v-card v-else class="mt-5 pa-10">
-          <v-row>
-            <h3>Indirizzo</h3>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-text-field v-model="data_address.address_street" label="street" required></v-text-field>
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-text-field v-model="data_address.address_number" label="numero" required></v-text-field>
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-select
-                class="pa-3"
-                label="comune"
-                v-model="data_address.municipality_id"
-                :items="municipalities"
-                item-text="municipality_name"
-                item-value="municipality_id"
-                @change="changeMunicipalitiesID"
-              ></v-select>
-            </v-col>
-          </v-row>
-        </v-card>
-
-        <v-row align="center" justify="center">
-          <div class="my-2">
-            <v-btn
-              color="pink darken-1"
-              dark
-              v-if="data_shop != null"
-              @click="saveAddress"
-            >Save Address</v-btn>
-          </div>
-        </v-row>
-      </v-col>
+        </v-col>
+      </v-row>
     </v-container>
   </v-app>
 </template>

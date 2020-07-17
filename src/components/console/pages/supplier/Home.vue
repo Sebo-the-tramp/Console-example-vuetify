@@ -52,7 +52,7 @@ const gradients = [
 export default {
   data: () => ({
     chartSettings: {
-      showLabels: true,
+      showLabels: false,
       lineWidth: 1.5,
       labelSize: 7,
       radius: 10,
