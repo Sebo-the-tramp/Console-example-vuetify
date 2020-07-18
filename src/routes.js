@@ -10,6 +10,8 @@ import AddSupplier from './components/console/pages/admin/AddSupplier.vue';
 import AllSuppliers from './components/console/pages/admin/AllSuppliers.vue';
 import AllProducts from './components/console/pages/admin/AllProducts.vue';
 import Docs from './components/console/pages/admin/Docs.vue';
+import CreateList  from './components/console/pages/user/CreateList.vue';
+import AllProductsView  from './components/console/pages/user/AllProductsView.vue';
 
 export const routes = [
     {
@@ -21,7 +23,9 @@ export const routes = [
             { path: '/add', component: AddSupplier, name: 'addSupplier'},
             { path: '/all_suppliers', component: AllSuppliers},
             { path: '/all_products', component: AllProducts},
-            { path: '/docs', component: Docs}
+            { path: '/docs', component: Docs},
+            { path: '/createList', component: CreateList},
+            { path: '/all_products_view', component: AllProductsView}
         ]
     },
     { path: '/login', component: Login, name: 'login' },

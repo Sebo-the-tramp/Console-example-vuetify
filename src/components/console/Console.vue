@@ -17,18 +17,8 @@
 
       <v-divider></v-divider>
 
-      <v-list dense v-if="admin">
-        <v-list-item :to="page.path" v-for="page in pagesAdmin" :key="page.path">
-          <v-list-item-action>
-            <v-icon>{{ page.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{page.text}}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-      <v-list dense v-else>
-        <v-list-item :to="page.path" v-for="page in pagesSupplier" :key="page.path">
+      <v-list dense>
+        <v-list-item :to="page.path" v-for="page in pages" :key="page.path">
           <v-list-item-action>
             <v-icon>{{ page.icon }}</v-icon>
           </v-list-item-action>
@@ -109,9 +99,13 @@ export default {
         text: "API documentation"
       }
     ],
+    pagesUser: [
+      { icon: "mdi-plus", path: "/createList", text: "Add List" },
+      { icon: "mdi-plus", path: "/all_products_view", text: "Product List" },
+    ],
+    pages:[],
     drawer: null,
     shop_list: [{ item_shop: null }],
-    admin: false,
     dialog: false,
     store: store,
     role: null,
@@ -150,8 +144,14 @@ export default {
       axios
         .get("/user/info")
         .then(res => {
-          this.info = res.data[userType];
-          this.info.initial = this.getInitials(res.data[userType].name);
+          console.log(res.data)
+          if(res.data.supplier == null){
+            this.info.name = res.data[userType].name;
+            this.info.initial = this.getInitials(res.data[userType].name);
+          }else{
+            this.name = "Test"
+            this.info.initial = "A";
+          }
         })
         .catch(err => {
           this.info = {name:"Sebastian Cavada"};
@@ -171,9 +171,16 @@ export default {
     if (role.includes("ADMIN")) {
       this.admin = true;
       this.role = "Admin";
-    } else if (role.includes("SUPPLIER")) {
+      this.pages = this.pagesAdmin;
+    } if (role.includes("USER")){
+      this.admin = false;
+      this.role = "User";
+      this.pages = this.pagesUser;
+    }
+    else if (role.includes("SUPPLIER")) {
       this.admin = false;
       this.role = "Supplier";
+      this.pages = this.pagesSupplier;
     }
 
     this.getDataUser(this.role.toLowerCase());
