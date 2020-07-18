@@ -20,7 +20,7 @@
                     label="Mail"
                     name="mail"
                     prepend-icon="mdi-account"
-                    type="text"
+                    type="mail"
                     v-model="data.username"
                     dark
                   />
