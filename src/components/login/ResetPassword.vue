@@ -11,20 +11,11 @@
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12 secondary rounded-xl">
               <v-toolbar color="primary" dark>
-                <v-toolbar-title>Supplier log-in</v-toolbar-title>
+                <v-toolbar-title>Reset password</v-toolbar-title>
                 <v-spacer />
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field
-                    label="Mail"
-                    name="mail"
-                    prepend-icon="mdi-account"
-                    type="mail"
-                    v-model="data.username"
-                    dark
-                  />
-
                   <v-text-field
                     id="password"
                     label="Password"
@@ -34,15 +25,21 @@
                     v-model="data.password"
                     dark
                   />
+                  <v-text-field
+                    id="passwordCheck"
+                    label="Password Check"
+                    name="password"
+                    prepend-icon="mdi-lock"
+                    type="password"
+                    v-model="data.passwordCheck"
+                    dark
+                  />
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-row>
-                  <v-col class="d-flex flex-row ml-3">
-                    <a @click="pushForgotPage()">Forgot password?</a>
-                  </v-col>
                   <v-col class="d-flex flex-row-reverse mr-3">
-                    <v-btn @click="login" color="primary" dark>Login</v-btn>
+                    <v-btn @click="login" color="primary" dark>Reset</v-btn>
                   </v-col>
                 </v-row>
               </v-card-actions>
@@ -66,8 +63,8 @@ export default {
     image:
       "https://images.unsplash.com/photo-1476231682828-37e571bc172f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80",
     data: {
-      username: "",
-      password: ""
+      password: "",
+      passwordCheck: ""
     },
     snackbar: false,
     snackbarText: "Ciao",
@@ -75,37 +72,27 @@ export default {
   }),
   methods: {
     login() {
-      if (this.data.username != "") {
-        if (this.data.password != "") {
-          if (this.validateMail(this.data.username)) {
-            axios
-              .post("/api/auth/signin", this.data)
-              .then(res => {
-                console.log(res);
-                var data = res.data;
-                if (data) {
-                  localStorage.setItem("human_id", data["id"]);
-                  localStorage.setItem("token", data["accessToken"]);
-                  localStorage.setItem("expiration", data["expiration"]);
-                  localStorage.setItem("roles", data["roles"]);
-                  this.$router.push({ name: "console" });
-                }
-              })
-              .catch(err => {
-                console.log(err);
+      if (this.data.password != "") {
+        if (this.data.password == this.data.passwordCheck) {
+          axios
+            .post("/api/auth/signin", this.data)
+            .then(res => {
+              console.log(res); 
+              this.$router.push({name:"login"})
+            })
+            .catch(err => {
+              console.log(err);
+              this.$router.push({name:"login"})
 
-                this.snackbarText = err;
-                this.snackbar = true;
-                this.data.password = "";
-              });
-          } else {
-            this.snackbarText = "Invalid email";
-          }
+              this.snackbarText = err;
+              this.snackbar = true;
+              this.data.password = "";
+            });
         } else {
-          this.snackbarText = "No password given";
+          this.snackbarText = "The passwords does not match";
         }
       } else {
-        this.snackbarText = "No mail inserted";
+        this.snackbarText = "No password given";
       }
       this.snackbar = true;
     },
@@ -114,9 +101,9 @@ export default {
       return re.test(email);
     },
     pushForgotPage() {
-     this.$router.push({name:"sendResetMail"}).catch((err) => {
+      this.$router.push({ name: "resetPassword" }).catch(err => {
         throw new Error(`Problem handling something: ${err}.`);
-    });
+      });
     }
   }
 };

@@ -14,6 +14,10 @@
                 <v-toolbar-title>Supplier log-in</v-toolbar-title>
                 <v-spacer />
               </v-toolbar>
+              <v-card-title>Reset your password</v-card-title>
+              <v-card-text
+                class="mt-2"
+              >Insert your email and a link where you can reset your password will be sent</v-card-text>
               <v-card-text>
                 <v-form>
                   <v-text-field
@@ -24,25 +28,12 @@
                     v-model="data.username"
                     dark
                   />
-
-                  <v-text-field
-                    id="password"
-                    label="Password"
-                    name="password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    v-model="data.password"
-                    dark
-                  />
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-row>
-                  <v-col class="d-flex flex-row ml-3">
-                    <a @click="pushForgotPage()">Forgot password?</a>
-                  </v-col>
                   <v-col class="d-flex flex-row-reverse mr-3">
-                    <v-btn @click="login" color="primary" dark>Login</v-btn>
+                    <v-btn @click="resetPassword()" color="primary" dark>Reset Password</v-btn>
                   </v-col>
                 </v-row>
               </v-card-actions>
@@ -76,33 +67,22 @@ export default {
   methods: {
     login() {
       if (this.data.username != "") {
-        if (this.data.password != "") {
-          if (this.validateMail(this.data.username)) {
-            axios
-              .post("/api/auth/signin", this.data)
-              .then(res => {
-                console.log(res);
-                var data = res.data;
-                if (data) {
-                  localStorage.setItem("human_id", data["id"]);
-                  localStorage.setItem("token", data["accessToken"]);
-                  localStorage.setItem("expiration", data["expiration"]);
-                  localStorage.setItem("roles", data["roles"]);
-                  this.$router.push({ name: "console" });
-                }
-              })
-              .catch(err => {
-                console.log(err);
+        if (this.validateMail(this.data.username)) {
+        //api to send the reset mail
+          axios
+            .post("/api/auth/reset_password", this.data)
+            .then(res => {
+              console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
 
-                this.snackbarText = err;
-                this.snackbar = true;
-                this.data.password = "";
-              });
-          } else {
-            this.snackbarText = "Invalid email";
-          }
+              this.snackbarText = err;
+              this.snackbar = true;
+              this.data.password = "";
+            });
         } else {
-          this.snackbarText = "No password given";
+          this.snackbarText = "Invalid email";
         }
       } else {
         this.snackbarText = "No mail inserted";
@@ -113,10 +93,11 @@ export default {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    pushForgotPage() {
-     this.$router.push({name:"sendResetMail"}).catch((err) => {
+    resetPassword(){
+      //just for now
+      this.$router.push({ name: "resetPassword" }).catch(err => {
         throw new Error(`Problem handling something: ${err}.`);
-    });
+      });
     }
   }
 };

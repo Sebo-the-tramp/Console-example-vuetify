@@ -21,14 +21,21 @@ router.beforeEach((to, from, next) => {
   var now = new Date().getTime();
   var expiration = new Date(localStorage.getItem("expiration"))
 
-  if (to.name !== 'login' && localStorage.getItem("token") == "undefined") {
+
+  //HEREEEE
+
+  if (['resetPassword', 'sendResetMail'].indexOf(to.name) >= 0){
+    console.log("ciao")
+    next()
+  }
+  else if (to.name !== 'login' && localStorage.getItem("token") == "undefined") {
     localStorage.removeItem("human_id");
     localStorage.removeItem("token");
     localStorage.removeItem("expiration");
     next({ name: 'login' })
   }
-  if (to.name !== 'login' && !localStorage.getItem("token")) next({ name: 'login' })
-  if (to.name !== 'login' && now > expiration) next({ name: "login" })
+  else if (to.name !== 'login' && !localStorage.getItem("token")) next({ name: 'login' })
+  else if (to.name !== 'login' && now > expiration) next({ name: "login" })
   else next()
 })
 
