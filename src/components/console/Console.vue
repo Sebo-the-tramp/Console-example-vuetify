@@ -5,7 +5,8 @@
         <v-list-item-content>
           <v-col cols="12" sm="3" md="3" class="ma-0 pa-0">
             <v-avatar color="blue" size="36">
-              <span class="white--text headline">{{info.initial}}</span>
+              <img v-if="info.img != null" :src="info.img" :alt="info.name" />
+              <span v-else class="white--text headline">{{info.initial}}</span>
             </v-avatar>
           </v-col>
           <v-col class="ma-0 pa-0">
@@ -51,7 +52,7 @@
     </v-footer>
 
     <v-dialog v-model="dialog" max-width="290">
-      <v-card class="secondary" dark>
+      <v-card>
         <v-card-title class="headline">Sei sicuro di uscire</v-card-title>
 
         <v-card-text>Le tue credenziali verranno cancellate dalla memoria e dovrai effettuare di nuovo il login per rientrare</v-card-text>
@@ -76,7 +77,7 @@ import store from "../../lib/store";
 
 export default {
   props: {
-    source: String
+    source: String,
   },
   data: () => ({
     pagesSupplier: [
@@ -84,32 +85,29 @@ export default {
       {
         icon: "mdi-order-bool-descending-variant",
         path: "/orders",
-        text: "Orders"
+        text: "Orders",
       },
-      { icon: "mdi-ab-testing", path: "/products", text: "Products" },
-      { icon: "mdi-account-cog", path: "/settings", text: "Settings" }
+      { icon: "mdi-basket", path: "/products", text: "Products List" },
+      { icon: "mdi-account-cog", path: "/settings", text: "Account settings" },
     ],
     pagesAdmin: [
+      { icon: "mdi-chart-line", path: "/statistics", text: "Statistics" },
       { icon: "mdi-hand-heart", path: "/all_suppliers", text: "All suppliers" },
       { icon: "mdi-food-variant", path: "/all_products", text: "All products" },
       { icon: "mdi-plus", path: "/add", text: "Add supplier" },
-      {
-        icon: "mdi-book-open-outline",
-        path: "/docs",
-        text: "API documentation"
-      }
+      { icon: "mdi-book-open-outline", path: "/docs",text: "API documentation"}
     ],
     pagesUser: [
       { icon: "mdi-plus", path: "/createList", text: "Add List" },
       { icon: "mdi-plus", path: "/all_products_view", text: "Product List" },
     ],
-    pages:[],
+    pages: [],
     drawer: null,
     shop_list: [{ item_shop: null }],
     dialog: false,
     store: store,
     role: null,
-    info: {name:"", initial:""}
+    info: { name: "", initial: "", img: null },
   }),
   methods: {
     changeroute(value) {
@@ -118,7 +116,7 @@ export default {
         //console.log(this.shop_list);
         this.$router.push({
           name: this.$router.name,
-          params: { shop_id: value }
+          params: { shop_id: value },
         });
         var first = value;
         var result = this.shop_list.splice(this.shop_list.indexOf(first), 1);
@@ -140,44 +138,47 @@ export default {
       return !this.$vuetify.theme.dark;
     },
     getDataUser(userType) {
+      console.log(userType);
       console.log("getting data of the user");
       axios
         .get("/user/info")
-        .then(res => {
-          console.log(res.data)
-          if(res.data.supplier == null){
-            this.info.name = res.data[userType].name;
-            this.info.initial = this.getInitials(res.data[userType].name);
-          }else{
-            this.name = "Test"
-            this.info.initial = "A";
-          }
+        .then((res) => {
+          console.log(res.data);
+          this.info.name = res.data[userType].name;
+          this.info.initial = this.getInitials(res.data[userType].name);
+          this.info.img = res.data[userType].image;
         })
-        .catch(err => {
-          this.info = {name:"Sebastian Cavada"};
+        .catch((err) => {
+          this.info = { name: "Sebastian Cavada" };
           this.info.initial = "SC";
           console.log(err);
         });
     },
-    getInitials(str){
-      var newmsg = str.replace(/[a-z]/g, '');
+    getInitials(str) {
+      var newmsg = str.replace(/[a-z]/g, "");
       return newmsg;
-    }
+    },
   },
 
   created() {
+    //update the item otherwise you need to reload the whole page in order for the new token to be sent
+    axios.defaults.headers = {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    };
+
     var role = localStorage.getItem("roles");
+    console.log(role);
 
     if (role.includes("ADMIN")) {
       this.admin = true;
       this.role = "Admin";
       this.pages = this.pagesAdmin;
-    } if (role.includes("USER")){
-      this.admin = false;
-      this.role = "User";
-      this.pages = this.pagesUser;
     }
-    else if (role.includes("SUPPLIER")) {
+    if (role.includes("CUSTOMER")) {
+      this.admin = false;
+      this.role = "Customer";
+      this.pages = this.pagesUser;
+    } else if (role.includes("SUPPLIER")) {
       this.admin = false;
       this.role = "Supplier";
       this.pages = this.pagesSupplier;
@@ -186,11 +187,6 @@ export default {
     this.getDataUser(this.role.toLowerCase());
 
     store.data.setMessageAction("Benvenuto!");
-
-    //update the item otherwise you need to reload the whole page in order for the new token to be sent
-    axios.defaults.headers = {
-      Authorization: "Bearer " + localStorage.getItem("token")
-    };
-  }
+  },
 };
 </script>

@@ -23,7 +23,6 @@
                     prepend-icon="mdi-lock"
                     type="password"
                     v-model="data.password"
-                    dark
                   />
                   <v-text-field
                     id="passwordCheck"
@@ -32,7 +31,6 @@
                     prepend-icon="mdi-lock"
                     type="password"
                     v-model="data.passwordCheck"
-                    dark
                   />
                 </v-form>
               </v-card-text>
@@ -61,7 +59,7 @@ export default {
   },
   data: () => ({
     image:
-      "https://images.unsplash.com/photo-1476231682828-37e571bc172f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80",
+      "https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1502&q=80",
     data: {
       password: "",
       passwordCheck: ""

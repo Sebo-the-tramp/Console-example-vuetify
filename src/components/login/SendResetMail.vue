@@ -26,7 +26,6 @@
                     prepend-icon="mdi-account"
                     type="mail"
                     v-model="data.username"
-                    dark
                   />
                 </v-form>
               </v-card-text>
@@ -55,7 +54,7 @@ export default {
   },
   data: () => ({
     image:
-      "https://images.unsplash.com/photo-1476231682828-37e571bc172f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80",
+      "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
     data: {
       username: "",
       password: ""

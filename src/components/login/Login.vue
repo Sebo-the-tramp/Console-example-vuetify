@@ -2,14 +2,14 @@
   <v-app id="inspire">
     <v-content>
       <v-container
-        class="fill-height background"
+        class="fill-height"
         fluid
         v-bind:style="{ 'background-image': 'url(' + image + ')', 'background-size': 'cover' }"
         @keydown.enter="login"
       >
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
-            <v-card class="elevation-12 secondary rounded-xl">
+            <v-card class="elevation-12 rounded-xl">
               <v-toolbar color="primary" dark>
                 <v-toolbar-title>Supplier log-in</v-toolbar-title>
                 <v-spacer />
@@ -22,9 +22,7 @@
                     prepend-icon="mdi-account"
                     type="mail"
                     v-model="data.username"
-                    dark
                   />
-
                   <v-text-field
                     id="password"
                     label="Password"
@@ -32,7 +30,6 @@
                     prepend-icon="mdi-lock"
                     type="password"
                     v-model="data.password"
-                    dark
                   />
                 </v-form>
               </v-card-text>
