@@ -62,7 +62,8 @@ export default {
       "https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1502&q=80",
     data: {
       password: "",
-      passwordCheck: ""
+      passwordCheck: "",
+      token:""
     },
     snackbar: false,
     snackbarText: "Ciao",
@@ -103,6 +104,10 @@ export default {
         throw new Error(`Problem handling something: ${err}.`);
       });
     }
+  },
+  created(){
+    console.log(this.$route.query.token) // outputs 'yay'
+    this.data.token = this.$route.query.token;
   }
 };
 </script>

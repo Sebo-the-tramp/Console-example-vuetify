@@ -5,7 +5,7 @@
         class="fill-height background"
         fluid
         v-bind:style="{ 'background-image': 'url(' + image + ')', 'background-size': 'cover' }"
-        @keydown.enter="login"
+        @keydown.enter="sendMail"
       >
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
@@ -25,7 +25,7 @@
                     name="mail"
                     prepend-icon="mdi-account"
                     type="mail"
-                    v-model="data.username"
+                    v-model="data.mail"
                   />
                 </v-form>
               </v-card-text>
@@ -50,30 +50,30 @@ import axios from "axios";
 
 export default {
   props: {
-    source: String
+    source: String,
   },
   data: () => ({
     image:
       "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
     data: {
-      username: "",
-      password: ""
+      mail: "",
     },
     snackbar: false,
     snackbarText: "Ciao",
-    snackbarTimeout: 6000
+    snackbarTimeout: 6000,
   }),
   methods: {
-    login() {
-      if (this.data.username != "") {
-        if (this.validateMail(this.data.username)) {
-        //api to send the reset mail
+    sendMail() {
+      if (this.data.mail != "") {
+        if (this.validateMail(this.data.mail)) {
+          //api to send the reset mail
           axios
-            .post("/api/auth/reset_password", this.data)
-            .then(res => {
-              console.log(res);
+            .post("/api/auth/send_password_recovery_mail", {mail: this.data.mail}
+            )
+            .then(() => {
+              
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
 
               this.snackbarText = err;
@@ -92,12 +92,10 @@ export default {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    resetPassword(){
-      //just for now
-      this.$router.push({ name: "resetPassword" }).catch(err => {
-        throw new Error(`Problem handling something: ${err}.`);
-      });
-    }
-  }
+    resetPassword() {      
+      //this.sendMail();
+      this.$router.push({ name: "resetPassword" });
+    },
+  },
 };
 </script>
