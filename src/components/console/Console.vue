@@ -80,26 +80,12 @@ export default {
     source: String,
   },
   data: () => ({
-    pagesSupplier: [
-      { icon: "mdi-home", path: "/", text: "Home" },
-      {
-        icon: "mdi-order-bool-descending-variant",
-        path: "/orders",
-        text: "Orders",
-      },
-      { icon: "mdi-basket", path: "/products", text: "Products List" },
-      { icon: "mdi-account-cog", path: "/settings", text: "Account settings" },
-    ],
     pagesAdmin: [
-      { icon: "mdi-chart-line", path: "/statistics", text: "Statistics" },
-      { icon: "mdi-hand-heart", path: "/all_suppliers", text: "All suppliers" },
-      { icon: "mdi-food-variant", path: "/all_products", text: "All products" },
-      { icon: "mdi-plus", path: "/add", text: "Add supplier" },
+      { icon: "mdi-chart-line", path: "/statistics", text: "Statistics" },      
       { icon: "mdi-book-open-outline", path: "/docs",text: "API documentation"}
     ],
     pagesUser: [
-      { icon: "mdi-plus", path: "/createList", text: "Add List" },
-      { icon: "mdi-plus", path: "/all_products_view", text: "Product List" },
+      { icon: "mdi-plus", path: "/welcome", text: "Add List" },      
     ],
     pages: [],
     drawer: null,
