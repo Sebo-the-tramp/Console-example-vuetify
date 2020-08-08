@@ -88,7 +88,7 @@ export default {
       { icon: "mdi-plus", path: "/welcome", text: "Add List" },      
     ],
     pages: [],
-    drawer: null,
+    drawer: false,
     shop_list: [{ item_shop: null }],
     dialog: false,
     store: store,
@@ -154,23 +154,6 @@ export default {
 
     var role = localStorage.getItem("roles");
     console.log(role);
-
-    if (role.includes("ADMIN")) {
-      this.admin = true;
-      this.role = "Admin";
-      this.pages = this.pagesAdmin;
-    }
-    if (role.includes("CUSTOMER")) {
-      this.admin = false;
-      this.role = "Customer";
-      this.pages = this.pagesUser;
-    } else if (role.includes("SUPPLIER")) {
-      this.admin = false;
-      this.role = "Supplier";
-      this.pages = this.pagesSupplier;
-    }
-
-    this.getDataUser(this.role.toLowerCase());
 
     store.data.setMessageAction("Benvenuto!");
   },
